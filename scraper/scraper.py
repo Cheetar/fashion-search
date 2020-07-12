@@ -2,6 +2,8 @@
 import os
 import time
 import pymysql
+import requests
+from bs4 import BeautifulSoup
 
 def open_connection():
     username = "dbuser"
@@ -25,6 +27,17 @@ CREATE TABLE images (
     except:
         pass
 
+def download_page(page_number: int):
+    url = "https://allani.pl/wyszukaj/sukienki?page={}".format(page_number)
+    text = requests.get(url).text
+    soup = BeautifulSoup(text, 'html.parser')
+    return soup
+
+def get_images(page):
+    links = []
+    for img in page.find_all(class_="tile--product-r__image-container__image"):
+        links.append(img.get("src"))
+    return links
 
 def main():
     time.sleep(5)

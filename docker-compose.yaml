@@ -7,11 +7,19 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
   db:
-    image: mysql:latest
-    command: --default-authentication-plugin=mysql_native_password
+    image: webhippie/mariadb:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USERNAME=dbuser
+      - MARIADB_PASSWORD=dbuser
+      - MARIADB_DATABASE=testdb
+      - MARIADB_MAX_ALLOWED_PACKET=128M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./data/backup:/var/lib/backup
+      - ./mysql-init-files:/docker-entrypoint-initdb.d
   scraper:
     build: scraper/
     environment:

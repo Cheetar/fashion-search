@@ -24,4 +24,8 @@ services:
     build: scraper/
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  ai:
+    build: ai/
+    ports:
+      - "3000:3000"
     

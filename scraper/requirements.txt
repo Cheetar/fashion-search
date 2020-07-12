@@ -1,3 +1,4 @@
 pymysql
+requests
 cryptography
 beautifulsoup4

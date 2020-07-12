@@ -1,5 +1,3 @@
-import json
-import zlib
 import sys, os
 import numpy as np
 from keras.preprocessing import image
@@ -12,12 +10,13 @@ from flask import Flask
 
 app = Flask(__name__)
 
-img_stack = []
+def toList(string):
+	string = string.strip('[]')
+	return [float(i) for i in string.split(', ')]
 
-@app.route('/add/<img>')
-def add(img):
-	img_stack.append(img)
-
+def distance(vector1, vector2):
+	return sum(map(lambda x, y: (x-y)**2, vector1, vector2))
+	
 
 @app.route('/calculate/<imgpath>')
 def calculate(imgpath):
@@ -26,8 +25,14 @@ def calculate(imgpath):
 	img_data = np.expand_dims(img_data, axis=0)
 	img_data = preprocess_input(img_data)
 	features = np.array(model.predict(img_data))
-	return zlib.compress((str(features.flatten().tolist())).encode('utf-8'))
-    
+	serialized_data = features.flatten().tolist()
+	return str(serialized_data)
+
+
+@app.route('/test')    
+def test():
+	return str(distance(toList(calculate('3.jpg')), toList(calculate('4.jpg'))))
+
     
 '''
 image.LOAD_TRUNCATED_IMAGES = True

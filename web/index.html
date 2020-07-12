@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Buy clothes. With neural networks. It's fun!">
+    <meta name="author" content="Mateusz Sieniawski, Krzysztof Haładyn, Michał Szaknis, Piotr Maksymiuk">
+
+    <title>Fashion search</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="album.css" rel="stylesheet">
+
+    {% for photo in recents %}
+    <link rel="preload" href="{{ photo.uploaded_image }}" as="image">
+    <link rel="preload" href="{{ photo.found_image }}" as="image">
+    {% endfor %}
+  </head>
+
+  <body>
+
+    <header>
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 py-4">
+              <h4 class="text-white">About</h4>
+              <p class="text-muted">Buy clothes from photos. With neural networks. It's fun!</p>
+            </div>
+            <div class="col-sm-4 offset-md-1 py-4">
+              <h4 class="text-white">Contact</h4>
+              <ul class="list-unstyled">
+                <li><a href="https://discord.gg/hMcGkHX" class="text-white">Discord</a></li>
+                <li><a href="https://github.com/Cheetar/fashion-search" class="text-white">GitHub</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <strong>Fashion search</strong>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main role="main">
+
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Fashion search</h1>
+          <p class="lead text-muted">Buy clothes from photos. With neural networks. It's fun!</p>
+          <p>
+            <a href="#uploadsSection" class="btn btn-primary my-2">Upload your photo</a>
+            <a href="#recentsSection" class="btn btn-secondary my-2">See recent uploads</a>
+          </p>
+        </div>
+      </section>
+
+      <div class="row py-4 bg-dark" id="uploadsSection">
+        <div class="col-lg-6 mx-auto">
+          <!-- Upload image input-->
+          <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm" id="uploadGroup">
+            <input id="upload" type="file" class="form-control border-0" accept="image/*">
+            <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
+            <div class="input-group-append">
+              <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+            </div>
+          </div>
+
+          <!-- Uploaded image area-->
+          <div class="container" id="imageCard" style="display: none;">
+            <div class="row align-items-center">
+              <div class="col-md-4 card-container m-auto" id="imageCardContainer">
+                <div class="card-flip">
+                  <div class="front">
+                    <div class="card mb-4 box-shadow">
+                      <img class="card-img-top" src="" id="imageResult">
+                      <div class="card-body d-flex flex-column">
+                        <div class="mt-auto">
+                          <div id="uploadConfirm">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <small class="text-muted">Search for this?</small>
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="cancelButton">Cancel</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="searchButton">Search</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div id="uploadProgress" style="display: none;">
+                            <div class="progress" style="width: 100%;">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="back">
+                    <div class="card mb-4 box-shadow">
+                      <img class="card-img-top" src="" id="foundImage">
+                      <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                          <small class="text-muted" id="foundPrice"></small>
+                          <div class="btn-group">
+                            <a href="#" id="foundAgain" role="button" class="btn btn-sm btn-outline-secondary">Search another</a>
+                            <a href="#" id="foundBuy" target="_blank" role="button" class="btn btn-sm btn-outline-primary">Buy now</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="album py-5 bg-light" id="recentsSection">
+        <div class="container">
+          <div class="row">
+            {% for photo in recents %}
+            <div class="col-md-4 card-container-autoflip">
+              <div class="card-flip">
+                <div class="front">
+                  <div class="card mb-4 box-shadow">
+                    <img class="card-img-top" src="{{ photo.uploaded_image }}">
+                    <div class="card-body">
+                    </div>
+                  </div>
+                </div>
+                <div class="back">
+                  <div class="card mb-4 box-shadow">
+                    <img class="card-img-top" src="{{ photo.found_image }}">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <small class="text-muted">{{ photo.price }}</small>
+                        <div class="btn-group">
+                          <a href="{{ photo.url }}" target="_blank" role="button" class="btn btn-sm btn-outline-secondary">Buy now</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+        <p>Made on WWW16 for fun and toasts.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/1e5bbcf2b1.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

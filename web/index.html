@@ -66,54 +66,56 @@
         </div>
       </section>
 
-      <div class="row py-4 bg-dark" id="uploadsSection">
-        <div class="col-lg-6 mx-auto">
-          <!-- Upload image input-->
-          <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm" id="uploadGroup">
-            <input id="upload" type="file" class="form-control border-0" accept="image/*">
-            <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
-            <div class="input-group-append">
-              <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+      <form action="/" method="POST">
+        <div class="row py-4 bg-dark" id="uploadsSection">
+          <div class="col-lg-6 mx-auto">
+            <!-- Upload image input-->
+            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm" id="uploadGroup">
+              <input id="upload" type="file" name="file" class="form-control border-0" accept="image/*">
+              <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
+              <div class="input-group-append">
+                <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+              </div>
             </div>
-          </div>
 
-          <!-- Uploaded image area-->
-          <div class="container" id="imageCard" style="display: none;">
-            <div class="row align-items-center">
-              <div class="col-md-4 card-container m-auto" id="imageCardContainer">
-                <div class="card-flip">
-                  <div class="front">
-                    <div class="card mb-4 box-shadow">
-                      <img class="card-img-top" src="" id="imageResult">
-                      <div class="card-body d-flex flex-column">
-                        <div class="mt-auto">
-                          <div id="uploadConfirm">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <small class="text-muted">Search for this?</small>
-                              <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary" id="cancelButton">Cancel</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="searchButton">Search</button>
+            <!-- Uploaded image area-->
+            <div class="container" id="imageCard" style="display: none;">
+              <div class="row align-items-center">
+                <div class="col-md-4 card-container m-auto" id="imageCardContainer">
+                  <div class="card-flip">
+                    <div class="front">
+                      <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" src="" id="imageResult">
+                        <div class="card-body d-flex flex-column">
+                          <div class="mt-auto">
+                            <div id="uploadConfirm">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Search for this?</small>
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-sm btn-outline-secondary" id="cancelButton">Cancel</button>
+                                  <button type="button" class="btn btn-sm btn-outline-primary" id="searchButton">Search</button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div id="uploadProgress" style="display: none;">
-                            <div class="progress" style="width: 100%;">
-                              <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%;"></div>
+                            <div id="uploadProgress" style="display: none;">
+                              <div class="progress" style="width: 100%;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%;"></div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="back">
-                    <div class="card mb-4 box-shadow">
-                      <img class="card-img-top" src="" id="foundImage">
-                      <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                          <small class="text-muted" id="foundPrice"></small>
-                          <div class="btn-group">
-                            <a href="#" id="foundAgain" role="button" class="btn btn-sm btn-outline-secondary">Search another</a>
-                            <a href="#" id="foundBuy" target="_blank" role="button" class="btn btn-sm btn-outline-primary">Buy now</a>
+                    <div class="back">
+                      <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" src="" id="foundImage">
+                        <div class="card-body d-flex flex-column">
+                          <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <small class="text-muted" id="foundPrice">X zł</small>
+                            <div class="btn-group">
+                              <a href="#" id="foundAgain" role="button" class="btn btn-sm btn-outline-secondary">Try again</a>
+                              <a href="#" id="foundBuy" target="_blank" role="button" class="btn btn-sm btn-outline-primary">Buy now</a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -124,7 +126,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </form>
 
       <div class="album py-5 bg-light" id="recentsSection">
         <div class="container">
@@ -173,10 +175,11 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/1e5bbcf2b1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jq-ajax-progress@1.0.0/src/jq-ajax-progress.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

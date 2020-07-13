@@ -96,14 +96,18 @@ class Allani:
         links = []
         prices = []
         for entry in page.find_all(class_="tile--product-r__content"):
-            prices.append(entry.find_all(class_='product-prices')[0].findChild().contents[0])
-            links.append(entry.find_all(class_='tile--product-r__image-container__image')[0].get("src"))
+            price = entry.find_all(class_='product-prices')[0].findChild().contents[0]
+            link = entry.find_all(class_='tile--product-r__image-container__image')[0].get("src")
+            if price is None or link is None:
+                continue
+            prices.append(price)
+            links.append(link)
         return links, prices
 
 
 def main():
     print(os.listdir("/app/img"))
-    time.sleep(5)
+    time.sleep(120)
     db = open_connection()
     init_schema(db)
     Allani(db).scrape()

@@ -28,8 +28,9 @@ def distance(vector1, vector2):
     return sum(map(lambda x, y: (x-y)**2, vector1, vector2))
     
 def calculate(imgpath):
-    #try:    
-    img = image.load_img('/img/' + imgpath, target_size=(224, 224))
+    #try:
+    print(imgpath)  
+    img = image.load_img(imgpath, target_size=(224, 224))
     img_data = image.img_to_array(img)
     img_data = np.expand_dims(img_data, axis=0)
     img_data = preprocess_input(img_data)
@@ -40,22 +41,22 @@ def calculate(imgpath):
     #    raise Exception('Calculating failed')
 
 
-@app.route('/add/<id>')
-def add(id):
+@app.route('/add/<img_id>')
+def add(img_id):
     #try:
     with db.cursor() as cursor:
-        sql = "SELECT `image_path` FROM `images` WHERE `id`=%s"
-        cursor.execute(sql, (id))
+        sql = "SELECT image_path FROM images WHERE id=%s"
+        cursor.execute(sql, (img_id))
         result = cursor.fetchone()
-        print(str(result['image_path']))
+        print(str(result))
         vector = calculate('/img/' + str(result['image_path']))
-        sql = "INSERT INTO `images` (`vector`) VALUES (%s)"
-        cursor.execute(sql, (vector))
-        print('Added ID:',id)
+        sql = "UPDATE images SET vec = %s WHERE id = %d"
+        cursor.execute(sql, (vector, img_id))
+        print('Added ID:', img_id)
         os.remove('/img/' + str(result['image_path']))
         return 'ok', 200       
     #except:
-    #    return 'error', 400
+        #return 'error', 400
 
 @app.route('/find/<user_img>')
 def findBest(user_img):

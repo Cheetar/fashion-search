@@ -9,15 +9,15 @@ from flask import Flask
 app = Flask(__name__)
 
 
-
-image.LOAD_TRUNCATED_IMAGES = True
-model = VGG16(weights='imagenet', include_top=False)
-#db = open_connection()
+def main():
+    image.LOAD_TRUNCATED_IMAGES = True
+    model = VGG16(weights='imagenet', include_top=False)
+    db = open_connection()
     
 
 def open_connection():
-    username = "dbuser"
-    password = 'dbuser' #os.environ["MARIADB_ROOT_PASSWORD"]
+    username = os.environ["MARIADB_USERNAME"]
+    password = os.environ["MARIADB_ROOT_PASSWORD"]
     host = "db"
     database = "testdb"
     return pymysql.connect(host, username, password, database)
@@ -44,19 +44,37 @@ def calculate(imgpath):
 
 @app.route('/add/<id>')    
 def add(id):
-    with db.cursor() as cursor:
-        sql = "SELECT `image_path` FROM `images` WHERE `id`=%s"
-        cursor.execute(sql, (id))
-        result = cursor.fetchone()
-        #return str(result)
-        
-        try:
+    try:
+        with db.cursor() as cursor:
+            sql = "SELECT `image_path` FROM `images` WHERE `id`=%s"
+            cursor.execute(sql, (id))
+            result = cursor.fetchone()
+            #return str(result)
+
             vector = calculate(result.image_path)
             sql = "INSERT INTO `images` (`vector`) VALUES (%s)"
             cursor.execute(sql, (vector))
-            return('ok')       
-        except:
-            return('error')
+            return 'ok', 200       
+    except:
+        return 'error', 400
+
+@app.route('/find/<user_img>')
+def findBest(user_img):
+    try:
+        with db.cursor() as cursor:
+            sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
+            cursor.execute(sql)            
+            user_vector = 
+
+            sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
+            cursor.execute(sql)
+            result = cursor.fetchone()            
+            while result != None:
+                distance
+                
+
+    except:
+        return 'error', 400
 
 @app.route('/test')    
 def test():
@@ -67,8 +85,8 @@ def test():
             return 'error', 400
 
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
 
 '''
 image.LOAD_TRUNCATED_IMAGES = True

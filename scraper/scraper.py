@@ -24,6 +24,7 @@ CREATE TABLE images (
     id INTEGER NOT NULL AUTO_INCREMENT,
     image_path VARCHAR(1000),
     price INTEGER,
+    img_link VARCHAR(2000),
     store_link VARCHAR(2000),
     vec LONGTEXT,
     PRIMARY KEY(id)
@@ -37,7 +38,7 @@ CREATE TABLE history (
     id INTEGER NOT NULL AUTO_INCREMENT,
     path VARCHAR(1000),
     result INTEGER,
-    PRIMARY KEY(path),
+    PRIMARY KEY(id),
     FOREIGN KEY (result) REFERENCES images(id)
 );
 """)
@@ -46,8 +47,10 @@ CREATE TABLE history (
 
 def add_img_to_db(db, path, link, price):
     cursor = db.cursor()
-    cursor.execute("INSERT INTO images (id, image_path, price, store_link, vec) VALUES (NULL, %s, %s, %s, NULL); ", (path, str(price), link))
+    cursor.execute("INSERT INTO images (id, image_path, price, img_link, store_link, vec) VALUES (NULL, %s, %s, %s, %s, NULL); ", (path, str(price), link, link))
+    cursor.execute("SELECT LAST_INSERT_ID() from images")
     db.commit()
+    return cursor.fetchone()[0]
 
 class Allani:
     def __init__(self, db):
@@ -83,7 +86,8 @@ class Allani:
         while links:
             for (link, price) in zip(links, prices):
                 path = self.download_img(link)
-                add_img_to_db(self.db, path, link, self.format_price(price))
+                db_id = add_img_to_db(self.db, path, link, self.format_price(price))
+                requests.get("http://ai:3000/add/{}".format(db_id))
             page_nr += 1
             links, prices = self.parse_page(self.download_page(page_nr))
 

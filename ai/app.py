@@ -40,7 +40,7 @@ def calculate(imgpath):
     #    raise Exception('Calculating failed')
 
 
-@app.route('/add/<id>')    
+@app.route('/add/<id>')
 def add(id):
     #try:
     with db.cursor() as cursor:

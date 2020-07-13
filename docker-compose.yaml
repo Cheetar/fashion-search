@@ -2,6 +2,7 @@ version: '3'
 services:
   web:
     build: web/
+    restart: always
     ports:
       - "5000:5000"
     environment:
@@ -24,7 +25,6 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./data/backup:/var/lib/backup
-      - ./mysql-init-files:/docker-entrypoint-initdb.d
   scraper:
     build: scraper/
     environment:
@@ -36,6 +36,7 @@ services:
       - ./img:/app/img
   ai:
     build: ai/
+    restart: always
     ports:
       - "3000:3000"
     environment:

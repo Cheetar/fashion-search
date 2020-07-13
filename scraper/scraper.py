@@ -24,8 +24,20 @@ CREATE TABLE images (
     vec LONGTEXT NOT NULL
 );
 """)
-    except:
-        pass
+    except pymysql.err.InternalError as e:
+        print(e)
+    try:
+        cursor.execute("""
+CREATE TABLE history (
+    id INTEGER NOT NULL,
+    searched_image INTEGER,
+    PRIMARY KEY(id),
+    FOREIGN KEY(searched_image) REFERENCES images(id)
+);
+""")
+    except pymysql.err.InternalError as e:
+        print(e)
+
 
 def download_page(page_number: int):
     url = "https://allani.pl/wyszukaj/sukienki?page={}".format(page_number)

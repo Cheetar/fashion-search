@@ -1,3 +1,4 @@
+import json
 import pymysql
 import sys, os
 import numpy as np
@@ -33,7 +34,7 @@ def distance(vector1, vector2):
     
 def calculate(imgpath):
     try:    
-        img = image.load_img('img/' + imgpath, target_size=(224, 224))
+        img = image.load_img('/img/' + imgpath, target_size=(224, 224))
         img_data = image.img_to_array(img)
         img_data = np.expand_dims(img_data, axis=0)
         img_data = preprocess_input(img_data)
@@ -52,9 +53,11 @@ def add(id):
             cursor.execute(sql, (id))
             result = cursor.fetchone()
 
-            vector = calculate(result.image_path)
+            vector = calculate('/img/' + result.image_path)
             sql = "INSERT INTO `images` (`vector`) VALUES (%s)"
             cursor.execute(sql, (vector))
+            print('Added ID:',id)
+            os.remove('/img/' + result.image_path)
             return 'ok', 200       
     except:
         return 'error', 400
@@ -75,7 +78,15 @@ def findBest(user_img):
                 dst = distance(user_vector.vector, result.vector)
                 distances.append({'id':result.id, 'distance':dst})
             
-            return str(distances),200
+            best_distance = 10**25, best_id = -1            
+            for i in distances:
+                if i.distance < bestDistance:
+                    best_id, best_distance = i.id, i.distance
+            
+            if best_id == -1:
+                return 'error', 400
+            else:            
+                return str(best_id), 200
 
     except:
         return 'error', 400

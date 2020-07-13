@@ -4,8 +4,8 @@ $('#upload').change(function () {
     if (files && files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
-            $('#uploadGroup').css('display', 'none');
-            $('#imageCard').css('display', 'block');
+            $('#uploadGroup').slideUp(500);
+            $('#imageCard').slideDown(500);
             $('#imageResult').attr('src', e.target.result);
         };
         reader.readAsDataURL(files[0]);
@@ -14,16 +14,16 @@ $('#upload').change(function () {
 
 $('#cancelButton, #foundAgain').click(function() {
     $('#upload').val('');
-    $('#uploadGroup').css('display', '');
-    $('#imageCard').css('display', 'none');
+    $('#uploadGroup').slideDown(500);
+    $('#imageCard').slideUp(500);
     $('#imageCardContainer').removeClass('card-container-manualflip');
-    $('#uploadConfirm').css('display', '');
-    $('#uploadProgress').css('display', 'none');
+    $('#uploadConfirm').show();
+    $('#uploadProgress').hide();
 });
 
 $('#searchButton').click(function() {
-    $('#uploadConfirm').css('display', 'none');
-    $('#uploadProgress').css('display', '');
+    $('#uploadConfirm').hide();
+    $('#uploadProgress').show();
 
     $('.progress-bar').width('100%');
     $('.progress-bar').addClass('.progress-bar-animated');
@@ -62,9 +62,16 @@ $('#searchButton').click(function() {
         $('#foundPrice').text(data.price);
         $('#imageCardContainer').addClass('card-container-manualflip');
     }).fail(function() {
-        $('#uploadConfirm').css('display', '');
-        $('#uploadProgress').css('display', 'none');
+        $('#uploadConfirm').show();
+        $('#uploadProgress').hide();
         $('.progress-bar').addClass('.progress-bar-animated');
         alert('Oops something went wrong.');
     });
+});
+
+$(".sliding-link").click(function(e) {
+    e.preventDefault();
+    var aid = $(this).attr("href");
+    var top = aid === "#" ? 0 : $(aid).offset().top;
+    $('html,body').animate({scrollTop: top}, 'slow');
 });

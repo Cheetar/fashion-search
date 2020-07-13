@@ -1,4 +1,7 @@
 numpy
 keras
-pillow
 Flask
+pillow
+pymysql
+cryptography
+

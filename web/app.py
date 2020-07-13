@@ -31,7 +31,7 @@ def index():
     recents = []
 
     with db.cursor() as cursor:
-        cursor.execute("SELECT history.path, image.image_link, image.store_link, image.price FROM history"
+        cursor.execute("SELECT history.path, images.img_link, images.store_link, images.price FROM history"
                        " INNER JOIN images ON history.result = images.id"
                        " WHERE history.result IS NOT NULL"
                        " ORDER BY history.id DESC"
@@ -69,7 +69,7 @@ def upload_file():
         cursor.execute("INSERT INTO history (id, path, result) VALUES (NULL, %s, NULL)", (filename,))
         db.commit()
         cursor.execute('SELECT LAST_INSERT_ID() from history')
-        inserted_id = cursor.fetchone[0]
+        inserted_id = cursor.fetchone()[0]
 
     r = requests.get("http://ai:3000/find/%d" % inserted_id)
     if r.status_code != 200:
@@ -81,7 +81,7 @@ def upload_file():
     db.commit()
 
     with db.cursor() as cursor:
-        cursor.execute("SELECT image.image_link, image.store_link, image.price FROM history"
+        cursor.execute("SELECT images.img_link, images.store_link, images.price FROM history"
                        "INNER JOIN images ON history.result = images.id"
                        "WHERE history.id = %d", (inserted_id,))
         data = cursor.fetchone()

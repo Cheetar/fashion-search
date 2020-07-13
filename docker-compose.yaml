@@ -9,6 +9,8 @@ services:
       - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
       - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
+    volumes:
+      - ./img:/code/img
   db:
     image: webhippie/mariadb:latest
     restart: always
@@ -30,6 +32,8 @@ services:
       - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
       - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
+    volumes:
+      - ./img:/app/img
   ai:
     build: ai/
     ports:
@@ -39,4 +43,5 @@ services:
       - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
       - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
-    
+    volumes:
+      - ./img:/img

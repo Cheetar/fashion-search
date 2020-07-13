@@ -37,7 +37,7 @@ CREATE TABLE history (
     id INTEGER NOT NULL AUTO_INCREMENT,
     path VARCHAR(1000),
     result INTEGER,
-    PRIMARY KEY(path),
+    PRIMARY KEY(id),
     FOREIGN KEY (result) REFERENCES images(id)
 );
 """)

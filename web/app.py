@@ -74,16 +74,16 @@ def upload_file():
     r = requests.get("http://ai:3000/find/%d" % inserted_id)
     if r.status_code != 200:
         return r.text, r.status_code
-    best_id = int(r.text())
+    best_id = int(r.text)
 
     with db.cursor() as cursor:
-        cursor.execute("UPDATE history SET result = %d WHERE id = %d", (best_id, inserted_id))
+        cursor.execute("UPDATE history SET result = %s WHERE id = %s", (best_id, inserted_id))
     db.commit()
 
     with db.cursor() as cursor:
         cursor.execute("SELECT images.img_link, images.store_link, images.price FROM history"
-                       "INNER JOIN images ON history.result = images.id"
-                       "WHERE history.id = %d", (inserted_id,))
+                       " INNER JOIN images ON history.result = images.id"
+                       " WHERE history.id = %s", (inserted_id,))
         data = cursor.fetchone()
 
     response = {

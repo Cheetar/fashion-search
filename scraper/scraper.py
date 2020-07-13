@@ -35,9 +35,10 @@ CREATE TABLE images (
         cursor.execute("""
 CREATE TABLE history (
     id INTEGER NOT NULL AUTO_INCREMENT,
-    searched_image INTEGER,
-    PRIMARY KEY(id),
-    FOREIGN KEY(searched_image) REFERENCES images(id)
+    path VARCHAR(1000),
+    result INTEGER,
+    PRIMARY KEY(path),
+    FOREIGN KEY (result) REFERENCES images(id)
 );
 """)
     except pymysql.err.InternalError as e:
@@ -45,7 +46,7 @@ CREATE TABLE history (
 
 def add_img_to_db(db, path, link, price):
     cursor = db.cursor()
-    cursor.execute("INSERT INTO images (id, image_path, price, store_link, vec) VALUES (NULL, %s, %s, %s, NULL)", (path, str(price), link))
+    cursor.execute("INSERT INTO images (id, image_path, price, store_link, vec) VALUES (NULL, %s, %s, %s, NULL); ", (path, str(price), link))
     db.commit()
 
 class Allani:
@@ -65,10 +66,12 @@ class Allani:
         except:
             return None
         file_extension = guess_extension(response.headers['Content-Type'].partition(';')[0].strip())
-        with open("/app/img/" + hashlib.sha256(response.content).hexdigest() + file_extension, 'wb') as f:
+        file_name = hashlib.sha256(response.content).hexdigest() + file_extension
+        with open("/app/img/" + file_name, 'wb') as f:
             f.write(response.content)
         print(" Downloaded: {}".format(link))
         time.sleep(0.5)
+        return file_name
 
     def format_price(self, price):
         return int(price.replace("zł", "").replace(".", ""))

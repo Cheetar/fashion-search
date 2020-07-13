@@ -61,30 +61,30 @@ def add(id):
 def findBest(user_img):
     try:
         with db.cursor() as cursor:
-            sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
-            cursor.execute(sql)            
-            #user_vector = cursor.fetchone()
-            distances = []            
+            cursor.execute("SELECT `id`, `path` FROM `history` WHERE `id` = %s", (user_img,))
+            user_vector = cursor.fetchone()
+            distances = []
 
-            sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
+            user_vector = calculate(str(user_vector['path']))
+
+            sql = "SELECT `id`, `vec` FROM `images` WHERE `vec` IS NOT NULL"
             cursor.execute(sql)
-            result = cursor.fetchone()      
-            while result != None:
-                dst = distance(user_vector.vector, result.vector)
-                distances.append({'id':result.id, 'distance':dst})
+            for result in cursor.fetchall():
+                dst = distance(user_vector, result['vec'])
+                distances.append({'id':result['id'], 'distance':dst})
             
             best_distance, best_id = 10**25, -1            
             for i in distances:
-                if i.distance < bestDistance:
-                    best_id, best_distance = i.id, i.distance
+                if i['distance'] < best_distance:
+                    best_id, best_distance = i['id'], i['distance']
             
             if best_id == -1:
-                return 'error', 400
+                return 'none found', 400
             else:            
                 return str(best_id), 200
 
-    except:
-        return 'error', 400
+    except Exception as e:
+        return str(e), 400
 
 @app.route('/test')    
 def test():

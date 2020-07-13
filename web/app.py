@@ -74,10 +74,10 @@ def upload_file():
     r = requests.get("http://ai:3000/find/%d" % inserted_id)
     if r.status_code != 200:
         return r.text, r.status_code
-    distances = r.json()
+    best_id = int(r.text())
 
     with db.cursor() as cursor:
-        cursor.execute("UPDATE history SET result = %d WHERE id = %d", (distances[0]['id'], inserted_id))
+        cursor.execute("UPDATE history SET result = %d WHERE id = %d", (best_id, inserted_id))
     db.commit()
 
     with db.cursor() as cursor:

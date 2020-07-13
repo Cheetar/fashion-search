@@ -46,15 +46,18 @@ def add(img_id):
     #try:
     with db.cursor() as cursor:
         sql = "SELECT image_path FROM images WHERE id=%s"
-        cursor.execute(sql, (img_id))
+        cursor.execute(sql, (img_id,))
         result = cursor.fetchone()
+        if not result:
+            raise Exception('wtf is this ID you are giving me?')
         print(str(result))
         vector = calculate('/img/' + str(result['image_path']))
-        sql = "UPDATE images SET vec = %s WHERE id = %d"
+        sql = "UPDATE images SET vec = %s WHERE id = %s"
         cursor.execute(sql, (vector, img_id))
+        db.commit()
         print('Added ID:', img_id)
         os.remove('/img/' + str(result['image_path']))
-        return 'ok', 200       
+        return 'ok', 200
     #except:
         #return 'error', 400
 
@@ -66,7 +69,7 @@ def findBest(user_img):
             user_vector = cursor.fetchone()
             distances = []
 
-            user_vector = calculate(str(user_vector['path']))
+            user_vector = calculate('/img/' + str(user_vector['path']))
 
             sql = "SELECT `id`, `vec` FROM `images` WHERE `vec` IS NOT NULL"
             cursor.execute(sql)

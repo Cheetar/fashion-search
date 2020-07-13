@@ -24,7 +24,6 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./data/backup:/var/lib/backup
-      - ./mysql-init-files:/docker-entrypoint-initdb.d
   scraper:
     build: scraper/
     environment:

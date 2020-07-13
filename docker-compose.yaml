@@ -5,15 +5,18 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-admin123}
+      - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
   db:
     image: webhippie/mariadb:latest
     restart: always
     environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MARIADB_USERNAME=dbuser
-      - MARIADB_PASSWORD=dbuser
-      - MARIADB_DATABASE=testdb
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-admin123}
+      - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
       - MARIADB_MAX_ALLOWED_PACKET=128M
       - MARIADB_INNODB_LOG_FILE_SIZE=64M
     volumes:
@@ -23,9 +26,17 @@ services:
   scraper:
     build: scraper/
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-admin123}
+      - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
   ai:
     build: ai/
     ports:
       - "3000:3000"
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-admin123}
+      - MARIADB_USERNAME=${MARIADB_USERNAME:-dbuser}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD:-dbuser}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-testdb}
     

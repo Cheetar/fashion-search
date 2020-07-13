@@ -17,9 +17,9 @@ def main():
 
 def open_connection():
     username = os.environ["MARIADB_USERNAME"]
-    password = os.environ["MARIADB_ROOT_PASSWORD"]
+    password = os.environ["MARIADB_PASSWORD"]
     host = "db"
-    database = "testdb"
+    database = password = os.environ["MARIADB_DATABASE"]
     return pymysql.connect(host, username, password, database)
 
 def toList(string):
@@ -27,6 +27,8 @@ def toList(string):
     return [float(i) for i in string.split(', ')]
 
 def distance(vector1, vector2):
+    vector1 = toList(vector1)
+    vector2 = toList(vector2)
     return sum(map(lambda x, y: (x-y)**2, vector1, vector2))
     
 def calculate(imgpath):
@@ -49,7 +51,6 @@ def add(id):
             sql = "SELECT `image_path` FROM `images` WHERE `id`=%s"
             cursor.execute(sql, (id))
             result = cursor.fetchone()
-            #return str(result)
 
             vector = calculate(result.image_path)
             sql = "INSERT INTO `images` (`vector`) VALUES (%s)"
@@ -64,14 +65,17 @@ def findBest(user_img):
         with db.cursor() as cursor:
             sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
             cursor.execute(sql)            
-            user_vector = 
+            #user_vector = cursor.fetchone()
+            distances = []            
 
             sql = "SELECT `id` `vector` FROM `images` WHERE `vector`!=NULL"
             cursor.execute(sql)
-            result = cursor.fetchone()            
+            result = cursor.fetchone()      
             while result != None:
-                distance
-                
+                dst = distance(user_vector.vector, result.vector)
+                distances.append({'id':result.id, 'distance':dst})
+            
+            return str(distances),200
 
     except:
         return 'error', 400
